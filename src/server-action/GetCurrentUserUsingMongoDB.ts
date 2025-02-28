@@ -1,6 +1,9 @@
+"use server";
+import { ConnectMonogDB } from "@/config/db-config";
 import User from "@/models/user-shcema";
 import { currentUser } from "@clerk/nextjs/server";
 
+ConnectMonogDB();
 export const GetCurrentUserUsingMongoDB = async () => {
   const user = await currentUser();
   try {
@@ -8,11 +11,7 @@ export const GetCurrentUserUsingMongoDB = async () => {
     const mpngoUser = await User.findOne({
       clerkUserId: user?.id,
     });
-    if (mpngoUser) {
-      return {
-        user: mpngoUser,
-      };
-    }
+    if (mpngoUser) return JSON.parse(JSON.stringify(mpngoUser));
 
     // if user does not exist, create the user
     const newUser = {
@@ -24,12 +23,22 @@ export const GetCurrentUserUsingMongoDB = async () => {
       bio: "",
     };
     const createNewUser = await User.create(newUser);
-    return {
-      user: createNewUser,
-    };
+
+    return JSON.parse(JSON.stringify(createNewUser));
   } catch (error) {
     return {
       error: error,
+    };
+  }
+};
+
+export const GetAllUsers = async () => {
+  try {
+    const users = await User.find({});
+    return JSON.parse(JSON.stringify(users));
+  } catch (error: any) {
+    return {
+      error: error.message,
     };
   }
 };

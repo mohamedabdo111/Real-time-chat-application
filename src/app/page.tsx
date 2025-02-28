@@ -1,21 +1,14 @@
-import { ConnectMonogDB } from "@/config/db-config";
-import { GetCurrentUserUsingMongoDB } from "@/server-action/GetCurrentUserUsingMongoDB";
-import { UserButton } from "@clerk/nextjs";
-import { auth, currentUser } from "@clerk/nextjs/server";
-ConnectMonogDB();
-export default async function Page() {
-  const { user } = await GetCurrentUserUsingMongoDB();
-  console.log(user);
+"use client";
+import { Divider } from "antd";
+import ChatArea from "./(private)/_chat-components/chat-area";
+import Chats from "./(private)/_chat-components/chats";
 
+export default async function Page() {
   return (
-    <div className=" flex flex-col gap-4 text-2xl ">
-      <UserButton />
-      <span>First name: {user?.name}</span>
-      <span>
-        Email:{" "}
-        {user?.emailAddresses ? user?.emailAddresses[0]?.emailAddress : ""}
-      </span>
-      <span>User name: {user?.username}</span>
+    <div className="flex h-screen">
+      <Chats></Chats>
+      <Divider type="vertical" className="border-gray-400 h-full"></Divider>
+      <ChatArea></ChatArea>
     </div>
   );
 }
