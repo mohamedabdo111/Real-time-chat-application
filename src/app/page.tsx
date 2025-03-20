@@ -7,7 +7,10 @@ export default async function Page() {
   return (
     <div className="flex h-screen">
       <Chats></Chats>
-      <Divider type="vertical" className="border-gray-400 h-full"></Divider>
+      <Divider
+        type="vertical"
+        className="border-gray-400 h-full mx-0"
+      ></Divider>
       <ChatArea></ChatArea>
     </div>
   );

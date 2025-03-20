@@ -1,10 +1,11 @@
 import { IUserType } from "@/interfaces";
+import { IChatState, SetChats } from "@/redux/chatSlice";
 import { IStateUser } from "@/redux/userSlice";
 import { CreateNewChat } from "@/server-action/chats";
 import { GetAllUsers } from "@/server-action/GetCurrentUserUsingMongoDB";
 import { Avatar, Button, Divider, message, Modal, Spin } from "antd";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const ChatModal = ({
   showModal,
@@ -19,6 +20,8 @@ const ChatModal = ({
   const { currentUserData }: IStateUser = useSelector(
     (state: any) => state.user
   );
+  const { chats }: IChatState = useSelector((state: any) => state.chat);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const getAllUsers = async () => {
@@ -46,6 +49,7 @@ const ChatModal = ({
         isGroupChat: false,
       });
       setSelectedUserId(userId);
+      dispatch(SetChats(response));
       if (response.error) throw new Error(response.error);
       message.success("Chat created successfully");
     } catch (error: any) {
@@ -70,7 +74,13 @@ const ChatModal = ({
           {!isLoading &&
             allUsers.length > 0 &&
             allUsers.map((user) => {
-              if (user._id === currentUserData._id) return null;
+              const chatAlreadyCreated = chats.find(
+                (chat) =>
+                  chat.users.find((u) => u._id === user._id) &&
+                  !chat.isGroupChat
+              );
+              if (user._id === currentUserData._id || chatAlreadyCreated)
+                return null;
               return (
                 <>
                   <div className="flex justify-between items-center">

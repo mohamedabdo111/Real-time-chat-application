@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Content from "./provider-components/content";
 import Header from "./provider-components/header";

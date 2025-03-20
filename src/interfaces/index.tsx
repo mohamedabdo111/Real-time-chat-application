@@ -2,10 +2,10 @@ export interface IUserType {
   _id: string;
   clerkUserId: string;
   name: string;
-  email: string;
+  email?: string;
   username: string;
-  profileImage: string;
-  bio: string;
+  profileImage?: string;
+  bio?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -13,7 +13,7 @@ export interface IUserType {
 export interface IChatType {
   _id: string;
   users: IUserType[];
-  createdBy: IUserType;
+  createdBy: IUserType | string;
   lastMessage: IMessageType;
   isGroupChat: boolean;
   groupName: string;
@@ -26,6 +26,7 @@ export interface IChatType {
 }
 
 export interface IMessageType {
+  socketId: string;
   _id: string;
   chat: IChatType;
   sender: IUserType;

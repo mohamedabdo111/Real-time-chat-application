@@ -34,8 +34,7 @@ const chatSchema = new mongoose.Schema(
       type: [mongoose.Schema.Types.ObjectId],
       ref: "users",
     },
-
-    unReadCount: {
+    unreadCounts: {
       type: Object,
       default: {},
     },

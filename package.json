@@ -12,11 +12,13 @@
     "@clerk/nextjs": "^6.10.6",
     "@reduxjs/toolkit": "^2.6.0",
     "antd": "^5.23.3",
+    "dayjs": "^1.11.13",
     "next": "14.2.16",
     "react": "^18",
     "react-dom": "^18",
     "react-redux": "^9.2.0",
-    "redux": "^5.0.1"
+    "redux": "^5.0.1",
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "@types/node": "^20",

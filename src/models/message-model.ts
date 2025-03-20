@@ -2,6 +2,10 @@ import mongoose from "mongoose";
 
 const messageschema = new mongoose.Schema(
   {
+    socketId: {
+      type: String,
+      default: "",
+    },
     chat: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "chats",
@@ -23,6 +27,7 @@ const messageschema = new mongoose.Schema(
     readBy: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: "users",
+      default: [],
     },
   },
   { timestamps: true }
@@ -32,5 +37,5 @@ if (mongoose.models && mongoose.models["messages"]) {
   mongoose.deleteModel("messages");
 }
 
-const Message = mongoose.model("messages", messageschema);
-export default Message;
+const MessageModel = mongoose.model("messages", messageschema);
+export default MessageModel;

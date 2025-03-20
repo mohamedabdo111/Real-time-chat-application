@@ -1,4 +1,5 @@
 "use client";
+import socket from "@/config/socket-config";
 import { IUserType } from "@/interfaces";
 import { IStateUser } from "@/redux/userSlice";
 import { useClerk } from "@clerk/nextjs";
@@ -24,6 +25,7 @@ const CurrentUserInfo = ({
   const onLogout = async () => {
     try {
       setLoading(true);
+      socket.emit("logout", currentUserData?._id);
       await signOut();
       setShowCurrentUser(false);
       message.success("Logout Successfully");

@@ -6,7 +6,8 @@ import CurrentUserInfo from "@/providers/provider-components/current-user-info";
 import { IUserType } from "@/interfaces";
 import { usePathname } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { IStateUser, SetCurrentUser } from "@/redux/userSlice";
+import { IStateUser, SetCurrentUser, SetOnlineUsers } from "@/redux/userSlice";
+import socket from "@/config/socket-config";
 const Header = () => {
   const [showCurrentUser, setShowCurrentUser] = React.useState<boolean>(false);
   const pathname = usePathname();
@@ -19,35 +20,46 @@ const Header = () => {
     pathname.includes("sign-in") || pathname.includes("sign-up");
   // if (isPathname) return null;
   const dispatch = useDispatch();
-  const getCurrentUser = async () => {
-    try {
-      const response = await GetCurrentUserUsingMongoDB();
-      if (response.error) throw new Error(response.error);
-      dispatch(SetCurrentUser(response as IUserType));
-    } catch (error: any) {
-      console.log(error.message);
-    }
-  };
 
   useEffect(() => {
+    const getCurrentUser = async () => {
+      try {
+        const response = await GetCurrentUserUsingMongoDB();
+        if (response.error) throw new Error(response.error);
+        dispatch(SetCurrentUser(response as IUserType));
+      } catch (error: any) {
+        console.log(error.message);
+      }
+    };
     getCurrentUser();
   }, []);
+
+  useEffect(() => {
+    if (currentUserData) {
+      socket.emit("join", currentUserData._id);
+      socket.on("online-users", (data: any) => {
+        dispatch(SetOnlineUsers(data));
+      });
+    }
+  }, [currentUserData]);
   return (
-    <div className="flex justify-between items-center px-5 py-4 bg-gray-200 !border-b-2 !border-gray-300">
-      <h3 className=" text-xl uppercase">Chat App</h3>
-      <div className="flex items-center gap-5">
-        <span>{currentUserData?.name}</span>
-        <Avatar
-          src={currentUserData?.profileImage}
-          className="cursor-pointer"
-          onClick={() => setShowCurrentUser(!showCurrentUser)}
-        ></Avatar>
+    currentUserData && (
+      <div className="flex justify-between items-center px-5 py-4 bg-gray-200 !border-b-2 !border-gray-300">
+        <h3 className=" text-xl uppercase">Chat App</h3>
+        <div className="flex items-center gap-5">
+          <span>{currentUserData?.name}</span>
+          <Avatar
+            src={currentUserData?.profileImage}
+            className="cursor-pointer"
+            onClick={() => setShowCurrentUser(!showCurrentUser)}
+          ></Avatar>
+        </div>
+        <CurrentUserInfo
+          setShowCurrentUser={setShowCurrentUser}
+          showCurrentUser={showCurrentUser}
+        ></CurrentUserInfo>
       </div>
-      <CurrentUserInfo
-        setShowCurrentUser={setShowCurrentUser}
-        showCurrentUser={showCurrentUser}
-      ></CurrentUserInfo>
-    </div>
+    )
   );
 };
 
