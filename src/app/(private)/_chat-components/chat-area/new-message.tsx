@@ -5,6 +5,7 @@ import { CreateMessage } from "@/server-action/messages";
 import { Button, message } from "antd";
 import dayjs from "dayjs";
 import EmojiPicker from "emoji-picker-react";
+import { read } from "fs";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 
@@ -23,6 +24,7 @@ const NewMessage = () => {
         image: "",
         createdAt: dayjs().toISOString(),
         updatedAt: dayjs().toISOString(),
+        readBy: [],
       };
       const socketPayload = {
         ...commonPayload,

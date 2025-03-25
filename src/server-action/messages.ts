@@ -46,3 +46,30 @@ export const GetChatMessage = async (chatId: string) => {
     };
   }
 };
+
+export const ReadAllMessages = async ({
+  chatId,
+  userId,
+}: {
+  chatId: string;
+  userId: string;
+}) => {
+  try {
+    await MessageModel.updateMany(
+      { chat: chatId, sender: { $ne: userId }, readBy: { $ne: userId } },
+      { $addToSet: { readBy: userId } }
+    );
+
+    const existingChat = await chatModel.findById(chatId);
+    const existingChatUnread = existingChat?.unreadCounts;
+    const newUnreadCount = { ...existingChatUnread, [userId]: 0 };
+    await chatModel.findByIdAndUpdate(chatId, {
+      unreadCounts: newUnreadCount,
+    });
+    return { messages: "Messages read successfully" };
+  } catch (error: any) {
+    return {
+      error: error.message,
+    };
+  }
+};

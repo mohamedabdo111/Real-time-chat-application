@@ -1,5 +1,6 @@
 import { formatDate } from "@/helpers/date-format";
 import { IMessageType } from "@/interfaces";
+import { IChatState } from "@/redux/chatSlice";
 import { IStateUser } from "@/redux/userSlice";
 import { Avatar } from "antd";
 import React from "react";
@@ -9,7 +10,16 @@ const MessageCard = ({ message }: { message: IMessageType }) => {
   const { currentUserData }: IStateUser = useSelector(
     (state: any) => state.user
   );
+  const { selectedChat }: IChatState = useSelector((state: any) => state.chat);
   const isLoggedInMessage = message.sender._id === currentUserData._id;
+
+  let read = false;
+  if (
+    selectedChat &&
+    selectedChat?.users?.length - 1 === message.readBy.length
+  ) {
+    read = true;
+  }
 
   if (isLoggedInMessage) {
     return (
@@ -18,6 +28,9 @@ const MessageCard = ({ message }: { message: IMessageType }) => {
           <p className=" bg-primary text-white rounded-xl rounded-tl-none p-2 px-4 w-fit">
             {message.textmessage}
           </p>
+          <i
+            className={`ri-check-double-line ${read ? "text-green-500" : ""}`}
+          ></i>
           <span className="text-gray-500 text-sm">
             {formatDate(message.createdAt ?? message.sender.createdAt)}
           </span>

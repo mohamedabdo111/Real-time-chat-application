@@ -20,7 +20,7 @@ export interface IChatType {
   groupeProfilePicture: string;
   groupBio: string;
   groupAdmins: IUserType[];
-  unReadCount: any;
+  unreadCounts: any;
   createdAt: string;
   updatedAt: string;
 }
