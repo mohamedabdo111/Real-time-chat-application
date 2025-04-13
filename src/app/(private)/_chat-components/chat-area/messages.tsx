@@ -41,8 +41,8 @@ const Messages = () => {
     }
     let unReadMessages = 0;
     let chat = chats.find((chat) => chat._id === selectedChat?._id!);
-    if (chat) {
-      unReadMessages = chat.unreadCounts[currentUserData?._id!] || 0;
+    if (chat && chat.unreadCounts) {
+      unReadMessages = chat?.unreadCounts[currentUserData?._id!] || 0;
     }
 
     if (unReadMessages > 0) {

@@ -3,8 +3,10 @@ import Link from "next/link";
 import React from "react";
 import GroupForm from "./_components/group-form";
 import User from "@/models/user-shcema";
+import { ConnectMonogDB } from "@/config/db-config";
 
 const CreateGroup = async () => {
+  ConnectMonogDB();
   const users = await User.find({});
 
   return (
